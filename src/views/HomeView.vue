@@ -236,7 +236,7 @@ export default {
   }
 }
 .next{
-  padding: 20px 0;
+  padding: 20px 9px;
   margin-left: 3em;
   width: 100%;
   height: fit-content;
