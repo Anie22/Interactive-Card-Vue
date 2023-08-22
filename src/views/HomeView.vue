@@ -102,6 +102,9 @@
         </div>
       </div>
     </div>
+    <div class="attribution">
+      <p> &copy;.copyright 2023 coded by Aniebiet</p>
+    </div>
   </section>
 </template>
 
@@ -249,7 +252,7 @@ export default {
 }
 @media screen and (max-width: 768px) {
   .next{
-    margin: 7em 0 0 0;
+    margin: 5em 0 1.5em 0;
     left: 14%;
   }
 }
@@ -315,6 +318,11 @@ export default {
     margin-left: 42%;
   }
 }
+@media screen and (max-width: 768px) {
+  .text{
+    margin-left: 50%;
+  }
+}
 @media screen and (max-width: 320px) {
   .text{
     margin-left: 42%;
@@ -350,7 +358,7 @@ export default {
     position: relative !important;
     width: 46% !important;
     left: 25%;
-    top: 51%;
+    top: 40%;
   }
 }
 @media screen and (max-width: 425px) {
@@ -476,5 +484,29 @@ label{
   font-size: 12px;
   text-transform: capitalize;
   color: hsl(0, 95%, 49%);
+}
+.attribution{
+  text-align: right;
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: -65px;
+  padding: 0 30px 0 0;
+}
+@media screen and (max-width: 1024px) {
+  .attribution{
+    margin: -50px 0 0 -78px;
+  }
+}
+@media screen and (max-width: 768px) {
+  .attribution{
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+}
+@media screen and (max-width: 320px) {
+  .attribution{
+    font-size: 17px;
+  }
 }
 </style>
