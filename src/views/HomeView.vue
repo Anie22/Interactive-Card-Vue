@@ -221,7 +221,7 @@ export default {
     display: flex;
     flex-direction: column-reverse;
     width: 100%;
-    height: 60vh;
+    height: 57vh;
   }
 }
 .second-stage{
