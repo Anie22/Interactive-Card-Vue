@@ -14,7 +14,7 @@
           <div class="d-flex justify-content-between align-item-center">
             <p class="name ml-3">{{cardN}}</p>
             <div class="d-flex">
-              <p class="num">{{cardM}}</p>
+              <p class="num" v-if="selectedMonth">{{cardM}}</p>
               <p class="num">{{s}}</p>
               <p class="num mr-3">{{cardY}}</p>
             </div>
@@ -48,57 +48,61 @@
           <div></div>
         </div>
       </div>
-       <div class="second-stage d-flex justify-content-center align-items-center">
+      <div class="second-stage d-flex justify-content-center align-items-center">
         <div class="col-lg-7 next">
-          <form action="" @submit.prevent="cardInput">
-          <div class="form-group">
-            <label for="name">Cardholder name</label><br>
-            <input type="card-name" class="form-control" placeholder="e.g. Jane appleseed " v-model="CardName"/>
-            <p v-if="error.general" class="error">{{ error.general }}</p>
-            <p v-if="error.CardName" class="error">{{ error.CardName }}</p>
-            <p></p>
-          </div>
-          <div class="form-group">
-            <label for="number">card number</label><br>
-            <input type="card-name" class="form-control" placeholder="e.g. 1234 5678 9123 0000" v-model="CardNumber" maxlength="16"/>
-            <p v-if="error.general" class="error">{{ error.general }}</p>
-            <p v-if="error.CardNumber" class="error">{{ error.CardNumber }}</p>
-          </div>
-          <div class="d-flex justify-content-between gap-label">
+          <p class="h4 text-right text-primary">VueJs</p>
+          <form v-if="!submitted" action="" @submit.prevent="cardInput">
             <div class="form-group">
-              <label for="ex.date">exp. date (mm/yy)</label><br>
-              <div class="d-flex gap-x">
-                <div class="width mr-3-form">
-                  <!-- <select 
-                    class="form-control uptown" 
-                    v-model="select" 
-                    aria-label="Default select example"
-                  >
-                    <option :value="null">00</option>
-                    <option v-for="(Month, index) in Month" :key="index">{{Month}}</option>
-                  </select> -->
-                  <input type="card-name" class="form-control uptown" placeholder="e.g. MM" v-model="Month" maxlength="2">
-                  <p v-if="error.general" class="error">{{ error.general }}</p>
-                  <p v-if="error.Month" class="error">{{ error.Month }}</p>
-                </div>
-                <div class="width">
-                  <input type="card-name" class="form-control uptown" placeholder="e.g. YY" v-model="CardYear" maxlength="2">
-                  <p v-if="error.general" class="error">{{ error.general }}</p>
-                  <p v-if="error.CardYear" class="error">{{ error.CardYear }}</p>
+              <label for="name">Cardholder name</label><br>
+              <input type="text" class="form-control" placeholder="e.g. Jane appleseed " v-model="CardName" @input="nameInput" @paste="nameInputPaste" maxlength="20"/>
+              <p v-if="error.general" class="error">{{ error.general }}</p>
+              <p v-if="error.CardName" class="error">{{ error.CardName }}</p>
+              <p></p>
+            </div>
+            <div class="form-group">
+              <label for="number">card number</label><br>
+              <input type="text" ref="input1" class="form-control" placeholder="e.g. 1234 5678 9123 0000" v-model="CardNumber" maxlength="19" @input="numberInput"/>
+              <p v-if="error.general" class="error">{{ error.general }}</p>
+              <p v-if="error.CardNumber" class="error">{{ error.CardNumber }}</p>
+              <p v-if="error.CardNum" class="error">{{ error.CardNum }}</p>
+            </div>
+            <div class="d-flex justify-content-between gap-label">
+              <div class="form-group">
+                <label for="ex.date">exp. date (mm/yy)</label><br>
+                <div class="d-flex gap-x">
+                  <div class="width mr-3-form">
+                    <select class="form-control uptown" v-model="selectedMonth">
+                      <option v-for="(month, index) in months" :key="index" :value="month">
+                        {{ month }}
+                      </option>
+                    </select>
+                    <p v-if="error.general" class="error">{{ error.general }}</p>
+                    <p v-if="error.Month" class="error">{{ error.Month }}</p>
+                  </div>
+                  <div class="width">
+                    <input type="text" ref="input2" class="form-control uptown" placeholder="e.g. YY" v-model="CardYear" @input="yearInput" maxlength="2"/>
+                    <p v-if="error.general" class="error">{{ error.general }}</p>
+                    <p v-if="error.CardYear" class="error">{{ error.CardYear }}</p>
+                  </div>
                 </div>
               </div>
+              <div class="form-group">
+                <label for="cvv">cvv</label><br>
+                <input type="text" ref="input3" class="form-control" placeholder="e.g. 123" v-model="CardCvv" maxlength="3" @input="cvvInput"/>
+                <p v-if="error.general" class="error">{{ error.general }}</p>
+                <p v-if="error.CardCvv" class="error">{{ error.CardCvv }}</p>
+              </div>
             </div>
-            <div class="form-group">
-              <label for="cvv">cvv</label><br>
-              <input type="card-name" class="form-control" placeholder="e.g. 123" v-model="CardCvv" maxlength="3"/>
-              <p v-if="error.general" class="error">{{ error.general }}</p>
-              <p v-if="error.CardCvv" class="error">{{ error.CardCvv }}</p>
-            </div>
-          </div>
-          <div class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center">
               <button class="btn-color">Confirm</button>
             </div>
           </form>
+          <div v-else class="thank">
+            <img src="../assets/image/icon-complete.svg" alt="completed">
+            <h1>Thank you!</h1>
+            <p>We've added your card details</p>
+            <button @click="Restart">Continue</button>
+          </div>
         </div>
       </div>
     </div>
@@ -114,31 +118,109 @@ export default {
   components: { CardInfo },
   data(){
     return{
-      select: null,
+      selectedMonth: 'MM',
+      submitted: false,
+      months: [
+        'MM', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'
+      ],
       CardName: "",
       CardNumber: "",
-      Month: "",
       CardYear: "",
       CardCvv: "",
+      CardNum: "",
       error: {},
       cardNum: '0000 0000 0000 0000',
       cardN: 'Jane appleseed',
       cardM: 'MM',
       cardY: 'YY',
       s: '/',
-      cardC: '000'
+      cardC: '000',
     };
   },
   methods: {
-    cardInput(){
+    nameInput(e){
+      // Checks if the value entered into the input field is a digit or mathematical operators and prevent it
+      this.CardName = this.CardName.replace(/[0-9+\-*/]/g, '');
 
-      if(
-        !this.CardName &&
-        !this.CardNumber &&
-        !this.Month &&
-        !this.CardYear &&
-        !this.CardCvv
-      ){
+      if(!this.CardName){
+        this.error = {};
+        this.error.CardName = "*Name required";
+      }else{
+        this.error.CardName = "";
+      }
+    },
+
+    nameInputPaste(e){
+      // Checks and prevent copying of numbers into the input field
+      const pastText = e.clipboardData.getData('text')
+      const filterText = pastText.replace(/[0-9]/g, "");
+
+      setTimeout(() => {
+        this.CardName = filterText;
+      }, 0);
+
+      e.preventDefault();
+    },
+
+    numberInput(e){
+      const inputVal = this.CardNumber
+
+      this.error= {};
+
+      // Remove spaces and update inputValue
+      this.CardNumber = e.target.value.replace(/\s/g, '');
+
+      // Checks if the input field is in a wrong format
+      if (!this.CardNumber) {
+        this.error = {};
+        this.error.CardNumber = "*Card number required";
+      }else if(!this.onlyNum(inputVal)){
+        this.error = {}
+        this.error.CardNum = "*Wrong format, Numbers only";
+      }else{
+        this.error.CardNum = "";
+        this.error.CardNumber = "";
+      }
+
+      // Your logic for handling input in the first input field
+      if (this.CardNumber.length === 16) {
+        // Move to the next input automatically
+        this.focusNextInput(2);
+      }
+    },
+
+    yearInput(){
+      // Prevents letters and mathematical operators from entering the field
+      this.CardYear = this.CardYear.replace(/[a-zA-Z+\-*/]/g, '');
+
+      // Your logic for handling input in the first input field
+      if (this.CardYear.length === 2) {
+        // Move to the next input automatically
+        this.focusNextInput(3);
+      }
+    },
+    
+    cvvInput(){
+      // Prevents letters and mathematical operators from entering the field
+      this.CardCvv = this.CardCvv.replace(/[a-zA-Z+\-*/]/g, '');
+    },
+
+    onlyNum(input){
+      // Checks if a digit is entered into the field and allows it. Else help the CardNumber field to throw back an error message
+      let inputNum = /^[0-9]+$/;
+      return inputNum.test(input)
+    },
+
+    focusNextInput(nextInputNumber) {
+      // Focus on the next input field if it exists
+      const nextInputRef = this.$refs[`input${nextInputNumber}`];
+      if (nextInputRef) {
+        nextInputRef.focus();
+      }
+    },
+
+    cardInput(){
+      if( !this.CardName && !this.CardNumber && !this.selectedMonth && !this.CardYear && !this.CardCvv){
         this.error = {};
         this.error.general = "*Input required"
       } else if (!this.CardName) {
@@ -147,32 +229,29 @@ export default {
       }else if (!this.CardNumber) {
         this.error = {};
         this.error.CardNumber = "*Card number required";
-      }else if (!this.Month) {
+      }else if (this.selectedMonth === 'MM') {
         this.error = {};
-        this.error.Month = "*Card month required";
+        this.error.Month = "*Invalid month";
       }else if (!this.CardYear) {
         this.error = {};
         this.error.CardYear = "*Card year required";
       }else if (!this.CardCvv){
         this.error = {};
         this.error.CardCvv = "*Card cvv required";
-      }else if(this.Month.length === 1){
-        this.error.Month = "*Invalid Card Month"
       }else{
-        alert('Confirm');
         this.cardNum = this.seperateInput
         this.cardN = this.CardName 
-        this.cardM = this.Month
+        this.cardM = this.selectedMonth
         this.cardY = this.CardYear
         this.cardC = this.CardCvv
+        this.submitted = true
       }
+    },
 
-      if(this.CardNumber.length > 16){
-        this.CardNumber.slice(0, 17)
-        this.error.CardNumber = "*Invalid Card Number"
-      } 
-      
-
+    // To restart the page
+    Restart(){
+      this.submitted = false
+      window.location.reload()
     }
   },
   computed: {
@@ -184,8 +263,12 @@ export default {
       let full = first.toString() + ' ' + second.toString() + ' ' + third.toString() + ' ' + fourth.toString()
       return full
     },
-    onlyNumber(){
-      this.CardNumber.value = this.CardNumber.value.replace(/[0-9]/g, "");
+    CardNumber(){
+       // Remove existing spaces and format input with spaces between digits
+      const cleanedInput = this.CardNumber.replace(/\s/g, '');
+      const formatted = cleanedInput.replace(/(\d{4})/g, '$1 ');
+
+      return formatted.trim();
     }
   }
 }
@@ -431,6 +514,11 @@ export default {
 input{
   text-transform: capitalize;
 }
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button{
+  -webkit-appearance: none;
+  margin: 0;
+}
 label{
   text-transform: uppercase;
   font-weight: 600;
@@ -508,5 +596,38 @@ label{
   .attribution{
     font-size: 17px;
   }
+}
+.thank{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+}
+
+.thank h1{
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+@media screen and (max-width: 320px) {
+  .thank h1{
+    letter-spacing: 2px;
+  }
+}
+.thank p{
+  font-size: 18px;
+  color: var(--Darkgrayishviolet);
+}
+
+.thank button{
+  color: var(--White);
+  width: 100%;
+  border-radius: 6px;
+  padding: 10px 0px;
+  border: none;
+  font-size: 18px;
+  background-color: var(--Verydarkviolet);
+  cursor: pointer;
 }
 </style>
